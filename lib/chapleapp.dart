@@ -31,6 +31,7 @@ class _ChapleAppState extends State<ChapleApp>
   List<PresentModel> presentMo = [];
   String connectionStatus = "Disconnected";
   String connectionStatusMessage = "";
+  String lastMessage = "-----------";
 
   @override
   void initState() {
@@ -128,6 +129,9 @@ class _ChapleAppState extends State<ChapleApp>
   void onGroupMessage(MessageChat messageChat) {
     events.add(messageChat);
     print('onGroupMessage: ${messageChat.toEventData()}');
+    setState(() {
+      lastMessage = messageChat.body ?? "";
+    });
   }
 
   @override
@@ -287,8 +291,9 @@ class _ChapleAppState extends State<ChapleApp>
                   ],
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
+                Text(lastMessage),
               ],
             ),
           ),
