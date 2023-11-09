@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xmpp_plugin/xmpp_plugin.dart';
 
-import 'app.dart';
+import 'chapleapp.dart';
 import 'main.dart';
 
 class MamExamples extends StatefulWidget {
