@@ -1,3 +1,4 @@
 /.idea/
 /.build/
-/.dart-tool/
+/.dart_tool/
+/pubspec.lock
