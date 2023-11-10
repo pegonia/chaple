@@ -1,4 +1,4 @@
-package de.chaple.chaple
+package de.froheswerk.chaple
 
 import io.flutter.embedding.android.FlutterActivity
 
