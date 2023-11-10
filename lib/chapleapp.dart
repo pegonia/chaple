@@ -12,8 +12,6 @@ import 'package:xmpp_plugin/models/present_mode.dart';
 import 'package:xmpp_plugin/success_response_event.dart';
 import 'package:xmpp_plugin/xmpp_plugin.dart';
 
-import 'homepage.dart';
-import 'native_log_helper.dart';
 import 'utils.dart';
 
 const myTask = "syncWithTheBackEnd";
@@ -31,7 +29,7 @@ class _ChapleAppState extends State<ChapleApp>
   List<PresentModel> presentMo = [];
   String connectionStatus = "Disconnected";
   String connectionStatusMessage = "";
-  String lastMessage = "-----------";
+  TextEditingController messagesArea = TextEditingController();
 
   @override
   void initState() {
@@ -74,7 +72,6 @@ class _ChapleAppState extends State<ChapleApp>
       "password": "chaple",
       "host": "chat.froheswerk.de",
       "port": '5222',
-      "nativeLogFilePath": NativeLogHelper.logFilePath,
       "requireSSLConnection": true,
       "autoDeliveryReceipt": true,
       "useStreamManagement": false,
@@ -89,17 +86,7 @@ class _ChapleAppState extends State<ChapleApp>
   void checkStoragePermission() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
-      final PermissionStatus _permissionStatus =
-          await Permission.storage.request();
-      if (_permissionStatus.isGranted) {
-        String filePath = await NativeLogHelper().getDefaultLogFilePath();
-        print('logFilePath: $filePath');
-      } else {
-        print('logFilePath: please allow permission');
-      }
-    } else {
-      String filePath = await NativeLogHelper().getDefaultLogFilePath();
-      print('logFilePath: $filePath');
+      //TODO:  handle no permisson
     }
   }
 
@@ -130,7 +117,12 @@ class _ChapleAppState extends State<ChapleApp>
     events.add(messageChat);
     print('onGroupMessage: ${messageChat.toEventData()}');
     setState(() {
-      lastMessage = messageChat.body ?? "";
+      var beforeText = messagesArea.text;
+      String sender = messageChat.from!
+          .substring(1 + messageChat.from!.lastIndexOf(('\.')));
+      String newText =
+          sender + ": " + (messageChat.body ?? "") + "\n" + beforeText;
+      messagesArea.value = TextEditingValue(text: newText);
     });
   }
 
@@ -293,7 +285,10 @@ class _ChapleAppState extends State<ChapleApp>
                 SizedBox(
                   height: 10,
                 ),
-                Text(lastMessage),
+                TextField(
+                    controller: messagesArea,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 4)
               ],
             ),
           ),
@@ -310,16 +305,6 @@ class _ChapleAppState extends State<ChapleApp>
         "Hi, da bin ich...",
         DateTime.now().millisecondsSinceEpoch.toString(),
         DateTime.now().millisecondsSinceEpoch);
-    if (response && isManageGroup) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(
-            groupName: grouname,
-          ),
-        ),
-      );
-    }
   }
 }
 

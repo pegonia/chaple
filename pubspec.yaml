@@ -1,7 +1,7 @@
 name: chaple
 description: Christliche App für Alle.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.4+5
+version: 1.0.5+6
 
 environment:
   sdk: '>=3.1.5 <4.0.0'
